@@ -19,6 +19,7 @@ const UserSchema = new mongoose.Schema({
         required: true
     },
     helix: {
+        movieIds: [],
         genres: [],
         years: [],
         ratings: [],

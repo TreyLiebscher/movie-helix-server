@@ -161,10 +161,12 @@ router.post('/login', localAuth, (req, res) => {
     });
 });
 
-router.post('/refresh-auth-token', jwtAuth, (req, res) => {
+router.post('/auth/refresh', jwtAuth, (req, res) => {
     const authToken = createAuthToken(req.user);
+    const username = req.user.username;
     res.json({
-        authToken
+        authToken,
+        username
     });
 });
 // // //
@@ -204,6 +206,7 @@ router.post('/changepassword', jwtAuth, tryCatch(changePassword));
 
 // PUT - Update User Helix //
 const HELIX_FIELDS = [
+                    'helix.movieIds',
                     'helix.genres',
                     'helix.years',
                     'helix.ratings',
@@ -223,17 +226,17 @@ async function updateHelix(req, res) {
     }
 
     const newFieldValues = getFields(HELIX_FIELDS, req);
-    const newFieldKeys = Object.keys(newFieldValues);
+    // const newFieldKeys = Object.keys(newFieldValues);
 
-    const pushObject = newFieldKeys.map((item) => {
-        const format = `helix.${item}`;
-        console.log('kiwi format returns', format);
-    })
+    // const pushObject = newFieldKeys.map((item) => {
+    //     const format = `helix.${item}`;
+    //     console.log('kiwi format returns', format);
+    // })
 
-    console.log(pushObject)
+    // console.log(pushObject)
 
-    console.log('kiwi keys are', newFieldKeys);
-    console.log('kiwi new field values are', newFieldValues);
+    // console.log('kiwi keys are', newFieldKeys);
+    // console.log('kiwi new field values are', newFieldValues);
     const updatedRecord = await UserModel.findByIdAndUpdate({
         '_id': req.params.id
     }, {
@@ -248,11 +251,6 @@ async function updateHelix(req, res) {
 }
 
 router.put('/helix/update/:id', tryCatch(updateHelix));
-
-
-// {$push: {<field>: ...}}
-// kiwi keys are [ 'genres', 'years' ]
-// kiwi new field values are { genres: 'action', years: '1976' }
 
 
 // // //

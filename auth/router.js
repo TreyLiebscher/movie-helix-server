@@ -54,7 +54,7 @@ async function changePassword(req, res) {
 
 router.post('/changepassword', jwtAuth, tryCatch(changePassword));
 
-router.post('/refresh-auth-token', jwtAuth, (req, res) => {
+router.post('/auth/refresh', jwtAuth, (req, res) => {
     const authToken = createAuthToken(req.user);
     res.json({authToken});
 });
