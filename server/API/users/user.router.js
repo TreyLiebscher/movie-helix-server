@@ -256,18 +256,29 @@ router.put('/helix/update/:id', tryCatch(updateHelix));
 // // //
 
 // GET - Profile //
-async function getUserProfile(req, res) {
-    const userProfile = await UserModel.findOne({
-        email: req.user.email
-    });
+// async function getUserProfile(req, res) {
+//     const userProfile = await UserModel.findOne({
+//         email: req.user.email
+//     });
 
-    res.json({
-        user: userProfile.serialize()
-    });
-}
+//     res.json({
+//         user: userProfile.serialize()
+//     });
+// }
 
-router.get('/profile', jwtAuth, tryCatch(getUserProfile));
+// router.get('/profile', jwtAuth, tryCatch(getUserProfile));
 // // //
 
+async function getProfile(req, res) {
+    const record = await UserModel
+        .findOne({
+            _id: req.user.id
+        })
+
+    res.json({
+        profile: record.serialize()
+    })
+}
+router.get('/profile', jwtAuth, tryCatch(getProfile));
 
 module.exports = router;
