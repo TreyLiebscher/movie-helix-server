@@ -28,7 +28,8 @@ const UserSchema = new mongoose.Schema({
         revenues: [],
         companies: [],
         countries: []
-    }
+    },
+    genres: [],
 }, {
     timestamps: {
         createdAt: 'createdAt'
@@ -37,11 +38,34 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.methods.serialize = function () {
 
+    const getFrequency = function (arr) {
+        let obj = {}, mostFreq = 0, which = [];
+  
+        arr.forEach(ea => {
+          if (!obj[ea]) {
+            obj[ea] = 1;
+          } else {
+            obj[ea]++;
+          }
+      
+          if (obj[ea] > mostFreq) {
+            mostFreq = obj[ea];
+            which = [ea];
+          } else if (obj[ea] === mostFreq) {
+            which.push(ea);
+          }
+        });
+      
+        return which;
+    }
+
+
     return {
         id: this._id,
         email: this.email,
         username: this.username,
-        helix: this.helix
+        helix: this.helix,
+        genres: getFrequency(this.helix.genres)
     };
 }
 
