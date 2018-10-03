@@ -1,11 +1,19 @@
 const UserModel = require('./users/user.model');
 const usersRouter = require('./users/user.router');
+const MovieModel = require('./movies/movie.model');
+const moviesRouter = require('./movies/movie.router');
 
 const apiConfig = {
     users: {
         router: usersRouter,
         models: {
             users: UserModel
+        }
+    },
+    movies: {
+        router: moviesRouter,
+        models: {
+            movies: MovieModel
         }
     }
 }
