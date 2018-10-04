@@ -205,52 +205,52 @@ router.post('/changepassword', jwtAuth, tryCatch(changePassword));
 // // //
 
 // PUT - Update User Helix //
-const HELIX_FIELDS = [
-                    'helix.movieIds',
-                    'helix.genres',
-                    'helix.years',
-                    'helix.ratings',
-                    'helix.runtimes',
-                    'helix.budgets',
-                    'helix.revenues',
-                    'helix.companies',
-                    'helix.countries'
-]
+// const HELIX_FIELDS = [
+//                     'helix.movieIds',
+//                     'helix.genres',
+//                     'helix.years',
+//                     'helix.ratings',
+//                     'helix.runtimes',
+//                     'helix.budgets',
+//                     'helix.revenues',
+//                     'helix.companies',
+//                     'helix.countries'
+// ]
 
-async function updateHelix(req, res) {
-    const existingRecord = await UserModel.findById(req.params.id);
-    if (existingRecord === null) {
-        return res.status(404).json({
-            message: 'NOT_FOUND'
-        });
-    }
+// async function updateHelix(req, res) {
+//     const existingRecord = await UserModel.findById(req.params.id);
+//     if (existingRecord === null) {
+//         return res.status(404).json({
+//             message: 'NOT_FOUND'
+//         });
+//     }
 
-    const newFieldValues = getFields(HELIX_FIELDS, req);
-    // const newFieldKeys = Object.keys(newFieldValues);
+//     const newFieldValues = getFields(HELIX_FIELDS, req);
+//     // const newFieldKeys = Object.keys(newFieldValues);
 
-    // const pushObject = newFieldKeys.map((item) => {
-    //     const format = `helix.${item}`;
-    //     console.log('kiwi format returns', format);
-    // })
+//     // const pushObject = newFieldKeys.map((item) => {
+//     //     const format = `helix.${item}`;
+//     //     console.log('kiwi format returns', format);
+//     // })
 
-    // console.log(pushObject)
+//     // console.log(pushObject)
 
-    // console.log('kiwi keys are', newFieldKeys);
-    // console.log('kiwi new field values are', newFieldValues);
-    const updatedRecord = await UserModel.findByIdAndUpdate({
-        '_id': req.params.id
-    }, {
-            $push: newFieldValues
-        }, {
-            new: true
-        })
-    res.json({
-        user: updatedRecord.serialize(),
-        message: 'Helix updated successfully'
-    })
-}
+//     // console.log('kiwi keys are', newFieldKeys);
+//     // console.log('kiwi new field values are', newFieldValues);
+//     const updatedRecord = await UserModel.findByIdAndUpdate({
+//         '_id': req.params.id
+//     }, {
+//             $push: newFieldValues
+//         }, {
+//             new: true
+//         })
+//     res.json({
+//         user: updatedRecord.serialize(),
+//         message: 'Helix updated successfully'
+//     })
+// }
 
-router.put('/helix/update/:id', tryCatch(updateHelix));
+// router.put('/helix/update/:id', tryCatch(updateHelix));
 
 
 // // //
@@ -269,16 +269,28 @@ router.put('/helix/update/:id', tryCatch(updateHelix));
 // router.get('/profile', jwtAuth, tryCatch(getUserProfile));
 // // //
 
-async function getProfile(req, res) {
-    const record = await UserModel
-        .findOne({
-            _id: req.user.id
-        })
+// async function getProfile(req, res) {
+//     const record = await UserModel
+//         .findOne({
+//             _id: req.user.id
+//         })
 
-    res.json({
-        profile: record.serialize()
-    })
+//     res.json({
+//         profile: record.serialize()
+//     })
+// }
+// router.get('/profile', jwtAuth, tryCatch(getProfile));
+
+async function getProfileWithMovies(req, res) {
+    const record = await UserModel.findOne({username: req.params.user})
+    .populate('movies').exec((err, movies) => {
+        // console.log(movies)
+        res.json({
+            user: movies.serialize()
+        })
+    });    
 }
-router.get('/profile', jwtAuth, tryCatch(getProfile));
+
+router.get('/profile/:user', tryCatch(getProfileWithMovies));
 
 module.exports = router;
