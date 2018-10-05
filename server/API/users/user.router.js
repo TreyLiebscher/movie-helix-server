@@ -281,7 +281,20 @@ router.post('/changepassword', jwtAuth, tryCatch(changePassword));
 // }
 // router.get('/profile', jwtAuth, tryCatch(getProfile));
 
-async function getProfileWithMovies(req, res) {
+async function getUserProfile(req, res) {
+    const record = await UserModel.findOne({username: req.user.username})
+        .populate('movies').exec((err, movies) => {
+            res.json({profile: movies.serialize(),
+                preferences: movies.findMost()
+            })
+        });
+    
+    console.log(record)
+}
+
+router.get('/profile/home', jwtAuth, tryCatch(getUserProfile));
+
+async function getPublicProfile(req, res) {
     const record = await UserModel.findOne({username: req.params.user})
     .populate('movies').exec((err, movies) => {
         // console.log(movies)
@@ -291,6 +304,6 @@ async function getProfileWithMovies(req, res) {
     });    
 }
 
-router.get('/profile/:user', tryCatch(getProfileWithMovies));
+router.get('/profile/:user', tryCatch(getPublicProfile));
 
 module.exports = router;
