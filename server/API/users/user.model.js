@@ -124,7 +124,6 @@ UserSchema.methods.findMost = function () {
             which.push(ea);
           }
         });
-      
         return which;
     }
 
@@ -143,13 +142,20 @@ UserSchema.methods.findMost = function () {
     }
     
     const genres = this.movies.map((item) => item.genre);
-    const userGenres = getFrequency(mapValues(genres));
+    const genreArray = mapValues(genres);
+    const genreArrayNames = genreArray.map((genre) => genre.name);
+    const userGenres = getFrequency(genreArrayNames);
+
 
     const companies = this.movies.map((item) => item.production_companies);
-    const userCompanies = getFrequency(mapValues(companies));
+    const companyArray = mapValues(companies);
+    const companyArrayNames = companyArray.map((company) => company.name);
+    const userCompanies = getFrequency(companyArrayNames);
 
     const countries = this.movies.map((item) => item.production_countries);
-    const userCountries = getFrequency(mapValues(countries));
+    const countryArray = mapValues(countries);
+    const countryArrayNames = countryArray.map((country) => country.name);
+    const userCountries = getFrequency(countryArrayNames);
 
     const budgets = this.movies.map((item) => item.budget);
     const userBudgets = getAverage(mapValues(budgets));
@@ -162,7 +168,7 @@ UserSchema.methods.findMost = function () {
 
     const ratings = this.movies.map((item) => item.rating);
     const userRatings = getAverage(mapValues(ratings));
-
+    
     return {
         genres: userGenres,
         companies: userCompanies,
