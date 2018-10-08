@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 
 const MovieSchema = new mongoose.Schema({
     title: String,
+    hasPoster: Boolean,
+    poster: String,
     year: String,
     genre : [],
     rating: Number,
@@ -19,6 +21,8 @@ MovieSchema.methods.serialize = function () {
     return {
         id: this._id,
         title: this.title,
+        hasPoster: this.hasPoster,
+        poster: this.poster,
         year: this.year,
         genre: this.genre,
         rating: this.rating,
