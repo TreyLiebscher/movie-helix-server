@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 const MovieSchema = new mongoose.Schema({
     title: String,
+    movieId: Number,
     hasPoster: Boolean,
     poster: String,
     year: String,
@@ -20,6 +21,7 @@ const MovieSchema = new mongoose.Schema({
 MovieSchema.methods.serialize = function () {
     return {
         id: this._id,
+        movieId: this.movieId,
         title: this.title,
         hasPoster: this.hasPoster,
         poster: this.poster,
