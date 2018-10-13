@@ -40,7 +40,8 @@ async function saveMovie(req, res) {
                 user.movies.push(movie);
                 user.save(function(err, user) {
                     res.json({
-                        user: user.serialize()
+                        user: user.serialize(),
+                        message: 'Movie Saved!'
                     })
                 })
             })
@@ -57,9 +58,9 @@ async function saveMovie(req, res) {
         const modifyExisting = (arr, existing) => {
             for (let i = 0; i < arr.length; i++) {
                 if (arr[i] == existing) {
-                    console.log('Already Saved')
+                    
                     return res.json({
-                        message: 'Already Saved'
+                        message: 'Already Saved!'
                     })
                 } 
             }
@@ -72,7 +73,8 @@ async function saveMovie(req, res) {
                     movie.users.push(req.body.user);
                     movie.save(function(err, movie) {
                         res.json({
-                            movie: movie.serialize()
+                            movie: movie.serialize(),
+                            message: 'Movie Saved!'
                         })
                     })
                 })

@@ -3,73 +3,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-// const UserSchema = new mongoose.Schema({
-//     email: {
-//         unique: true,
-//         type: String,
-//         required: true
-//     },
-//     username: {
-//         unique: true,
-//         type: String,
-//         required: true
-//     },
-//     password: {
-//         type: String,
-//         required: true
-//     },
-//     helix: {
-//         movieIds: [],
-//         genres: [],
-//         years: [],
-//         ratings: [],
-//         runtimes: [],
-//         budgets: [],
-//         revenues: [],
-//         companies: [],
-//         countries: []
-//     },
-//     genres: [],
-// }, {
-//     timestamps: {
-//         createdAt: 'createdAt'
-//     }
-// });
-
-// UserSchema.methods.serialize = function () {
-
-//     const getFrequency = function (arr) {
-//         let obj = {}, mostFreq = 0, which = [];
-  
-//         arr.forEach(ea => {
-//           if (!obj[ea]) {
-//             obj[ea] = 1;
-//           } else {
-//             obj[ea]++;
-//           }
-      
-//           if (obj[ea] > mostFreq) {
-//             mostFreq = obj[ea];
-//             which = [ea];
-//           } else if (obj[ea] === mostFreq) {
-//             which.push(ea);
-//           }
-//         });
-      
-//         return which;
-//     }
-
-
-//     return {
-//         id: this._id,
-//         email: this.email,
-//         username: this.username,
-//         helix: this.helix,
-//         genres: getFrequency(this.helix.genres)
-//     };
-// }
-
-
 const UserSchema = new mongoose.Schema({
     email: {
         unique: true,
@@ -144,7 +77,9 @@ UserSchema.methods.findMost = function () {
     const genres = this.movies.map((item) => item.genre);
     const genreArray = mapValues(genres);
     const genreArrayNames = genreArray.map((genre) => genre.name);
+    const genreArrayIds = genreArray.map((genre) => genre.id);
     const userGenres = getFrequency(genreArrayNames);
+    const userGenreId = getFrequency(genreArrayIds);
 
 
     const companies = this.movies.map((item) => item.production_companies);
@@ -171,6 +106,7 @@ UserSchema.methods.findMost = function () {
     
     return {
         genres: userGenres,
+        genreId: userGenreId,
         companies: userCompanies,
         countries: userCountries,
         budget: userBudgets,
