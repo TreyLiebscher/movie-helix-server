@@ -3,12 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "test": "npm run test:api",
     "start": "node server/server.js",
-    "develop": "nodemon --watch server --watch config.js server/server.js"
+    "test:api": "nyc mocha 'server/**/*.test.js' --exit --timeout 10000 --reporter min",
+    "develop": "nodemon --watch server --watch config.js server/server.js",
+    "testCover": "nyc mocha"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
     "debug": "~2.6.9",
@@ -17,9 +22,11 @@
     "http-errors": "~1.6.2",
     "jade": "~1.11.0",
     "jsonwebtoken": "^8.3.0",
+    "mocha": "^5.2.0",
     "mongoose": "^5.3.0",
     "mongoose-seed": "^0.5.1",
     "morgan": "~1.9.0",
+    "nyc": "^13.1.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",

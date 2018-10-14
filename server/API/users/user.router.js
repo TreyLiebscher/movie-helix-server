@@ -62,7 +62,7 @@ async function createNewUser(req, res) {
         });
     }
 
-    const explicitlyTrimmedFields = ['email', 'password'];
+    const explicitlyTrimmedFields = ['email', 'username', 'password'];
     const nonTrimmedField = await explicitlyTrimmedFields.find(
         field => req.body[field].trim() !== req.body[field]
     );
@@ -188,10 +188,11 @@ async function changePassword(req, res) {
     } = req.body
     const hashedNewPassword = await UserModel.hashPassword(newPassword);
 
-    const userRecordByEmail = await UserModel.findOne({
-        email: req.user.email
+    const userRecordByUsername = await UserModel.findOne({
+        username: req.user.username
     })
-    const userRecord = await UserModel.findByIdAndUpdate(userRecordByEmail._id, {
+    
+    const userRecord = await UserModel.findByIdAndUpdate(userRecordByUsername._id, {
         password: hashedNewPassword
     });
 
@@ -204,82 +205,6 @@ async function changePassword(req, res) {
 router.post('/changepassword', jwtAuth, tryCatch(changePassword));
 // // //
 
-// PUT - Update User Helix //
-// const HELIX_FIELDS = [
-//                     'helix.movieIds',
-//                     'helix.genres',
-//                     'helix.years',
-//                     'helix.ratings',
-//                     'helix.runtimes',
-//                     'helix.budgets',
-//                     'helix.revenues',
-//                     'helix.companies',
-//                     'helix.countries'
-// ]
-
-// async function updateHelix(req, res) {
-//     const existingRecord = await UserModel.findById(req.params.id);
-//     if (existingRecord === null) {
-//         return res.status(404).json({
-//             message: 'NOT_FOUND'
-//         });
-//     }
-
-//     const newFieldValues = getFields(HELIX_FIELDS, req);
-//     // const newFieldKeys = Object.keys(newFieldValues);
-
-//     // const pushObject = newFieldKeys.map((item) => {
-//     //     const format = `helix.${item}`;
-//     //     console.log('kiwi format returns', format);
-//     // })
-
-//     // console.log(pushObject)
-
-//     // console.log('kiwi keys are', newFieldKeys);
-//     // console.log('kiwi new field values are', newFieldValues);
-//     const updatedRecord = await UserModel.findByIdAndUpdate({
-//         '_id': req.params.id
-//     }, {
-//             $push: newFieldValues
-//         }, {
-//             new: true
-//         })
-//     res.json({
-//         user: updatedRecord.serialize(),
-//         message: 'Helix updated successfully'
-//     })
-// }
-
-// router.put('/helix/update/:id', tryCatch(updateHelix));
-
-
-// // //
-
-// GET - Profile //
-// async function getUserProfile(req, res) {
-//     const userProfile = await UserModel.findOne({
-//         email: req.user.email
-//     });
-
-//     res.json({
-//         user: userProfile.serialize()
-//     });
-// }
-
-// router.get('/profile', jwtAuth, tryCatch(getUserProfile));
-// // //
-
-// async function getProfile(req, res) {
-//     const record = await UserModel
-//         .findOne({
-//             _id: req.user.id
-//         })
-
-//     res.json({
-//         profile: record.serialize()
-//     })
-// }
-// router.get('/profile', jwtAuth, tryCatch(getProfile));
 
 async function getUserProfile(req, res) {
     const record = await UserModel.findOne({username: req.user.username})

@@ -124,7 +124,7 @@ const UserModel = mongoose.model('UserModel', UserSchema);
 
 
 const email = 'test@test.com';
-const username = 'tester';
+const username = 'Tester';
 const password = 'password123';
 
 const testUtilCreateUser = async () => {
