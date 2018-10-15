@@ -88,4 +88,49 @@ async function saveMovie(req, res) {
 router.post('/save', tryCatch(saveMovie));
 // // //
 
+// DELETE/PUT - Delete a Movie //
+async function deleteMovie(req, res) {
+    
+    const movieToDelete = await MovieModel.findOne({title: req.body.title});
+    
+    if (movieToDelete === null) {
+        res.json({
+            message: 'Movie does not exist'
+        })
+    } else {
+        // Reusable function for splicing out user/movie ids
+        const removeItem = (arr, item) => {
+            const index = arr.indexOf(item);
+
+            if (index !== -1) {
+                arr.splice(index, 1);
+            } else {
+                return;
+            }
+        }
+        // Modify both the user and movie model
+        const modifyRecords = () => {
+        
+            UserModel.findById(req.body.user, function(err, user) {
+                removeItem(user.movies, movieToDelete.id)
+                user.save()
+            }).then(
+                MovieModel.findById(movieToDelete.id, function(err, movie) {
+                    removeItem(movie.users, req.body.user)
+                    movie.save(function(err, movie) {
+                        res.json({
+                            movie: movie.serialize(),
+                            message: 'Movie Updated'
+                        })
+                    })
+                })
+            )
+        }
+        return modifyRecords();
+    }
+}
+
+router.delete('/delete', tryCatch(deleteMovie));
+// // //
+
 module.exports = router;
