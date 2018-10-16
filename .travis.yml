@@ -1,0 +1,13 @@
+language: node_js
+node_js: node
+cache:
+  directories:
+  - node_modules
+deploy:
+  provider: heroku
+  api_key:
+    secure: rIGiVBJCq3dBMJMkF0tg4IKXADJHImUJHtg7f/UcRaiSfHpHz+CZMg0CV3STl6F5+SYVUsFjM2I1mNvubUDnut7YxazOTBiMEaeEJuJEOYJwYuhmZa/7hEtM4k4zXM8Z8d++eASq0qPK63TTPSxmg53SJdfCXgvXowrbr3th36X1E7cCMymbX1RHBYrCvqYLnLcAODXdpHw+nVBuk/uNrrvQdKYk7RxwgY/vg52e32TKcvrY8qiylxzZ1tyTvKHV9tVcYb4y+fbaSnf7h+iXBhY6VVs0b9aFkgsXh73wRA+EIifGWvC21fNXKoPD4X0fkIs1BPIebxOQGsxkxr8LYf0GvmaKPenlNtWi6hPXk1KQJ/oCutrbmbQFe9ImV5t+bnF7xbpJqp2I+SEUuMfjDZKFHbNFMxkj5zXhKVlZW+L2iNif+akSk1PHCowdIg6ZYVe9UHiVdAwbtqOiIDkjtPR/mLkhg8ilUeFHz09aa8VRayGRTL2VpZFbjEMFziHQAikGPIcjyagCaQ/0lug0DConepG2NVYiK32d5ohmQiH3MAG1fZFu4SE+cBGSnTBTU4vsbBgJz2CMCd588/u0L5IjxNedBti/WNXtu8+tKA/Vye9pEHHVH9o1urS53J5pKhyzsKIIkj0sXCdwfO84szY71zRshb+krFyknpi0v5M=
+  app: enigmatic-inlet-80994
+
+  on:
+    repo: TreyLiebscher/movie-helix-server
