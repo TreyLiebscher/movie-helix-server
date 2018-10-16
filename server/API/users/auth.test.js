@@ -3,13 +3,10 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const jwt = require('jsonwebtoken');
-
 const { app, runServer, closeServer } = require('../../server');
 const { UserModel, testUtilCreateUser } = require('./user.model');
 const { JWT_SECRET, TEST_DATABASE_URL, PORT } = require('../../../config');
-
 const expect = chai.expect;
-
 const AUTH_REFRESH_ROUTE = '/users/refresh-auth-token';
 
 chai.use(chaiHttp);
