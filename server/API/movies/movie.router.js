@@ -90,12 +90,13 @@ router.post('/save', tryCatch(saveMovie));
 
 // DELETE/PUT - Delete a Movie //
 async function deleteMovie(req, res) {
-    
+    console.log('kiwi', req.body.title)
     const movieToDelete = await MovieModel.findOne({title: req.body.title});
-    
+    const globalUser = await UserModel.findById(req.body.user);
+    console.log('kiwi movieToDelete returns', movieToDelete)
     if (movieToDelete === null) {
         res.json({
-            message: 'Movie does not exist'
+            message: `Movie ${req.body.title} does not exist`
         })
     } else {
         // Reusable function for splicing out user/movie ids
@@ -108,23 +109,26 @@ async function deleteMovie(req, res) {
                 return;
             }
         }
-        // Modify both the user and movie model
-        const modifyRecords = () => {
+
+        const modifyRecords = async () => {
         
-            UserModel.findById(req.body.user, function(err, user) {
-                removeItem(user.movies, movieToDelete.id)
-                user.save()
+            const changedItems = await MovieModel.findById(movieToDelete.id, function(err, movie) {
+                removeItem(movie.users, req.body.user)
+                movie.save()
             }).then(
-                MovieModel.findById(movieToDelete.id, function(err, movie) {
-                    removeItem(movie.users, req.body.user)
-                    movie.save(function(err, movie) {
-                        res.json({
-                            movie: movie.serialize(),
-                            message: 'Movie Updated'
-                        })
+                UserModel.findById(req.body.user, function(err, user) {
+                    removeItem(user.movies, movieToDelete.id)
+                    user.save()
+                })
+            );
+
+           UserModel.findById(req.body.user).populate('movies').exec((err, movies) => {
+                    res.json({profile: movies.serialize(),
+                        preferences: movies.findMost()
                     })
                 })
-            )
+            
+            
         }
         return modifyRecords();
     }
