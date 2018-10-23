@@ -85,6 +85,7 @@ UserSchema.methods.findMost = function () {
     const companies = this.movies.map((item) => item.production_companies);
     const companyArray = mapValues(companies);
     const companyArrayNames = companyArray.map((company) => company.name);
+    console.log('kiwi company names', companyArrayNames)
     const companyArrayIds = companyArray.map((company) => company.id)
     const userCompanyIds = getFrequency(companyArrayIds);
     const userCompanies = getFrequency(companyArrayNames);
@@ -105,6 +106,14 @@ UserSchema.methods.findMost = function () {
 
     const ratings = this.movies.map((item) => item.rating);
     const userRatings = getAverage(mapValues(ratings));
+
+    const yearArray = this.movies.map((item) => item.year);
+    const formatYears = yearArray.map((year) => year.substring(0, 3))
+    const userYearArray = formatYears.map((year) => year + '0');
+    const userYears = getFrequency(userYearArray);
+
+    console.log('kiwi years returns', userYearArray)
+    console.log('kiwi most common year is', userYears)
     
     return {
         genres: userGenres,
@@ -112,6 +121,7 @@ UserSchema.methods.findMost = function () {
         companies: userCompanies,
         companyIds: userCompanyIds,
         countries: userCountries,
+        years: userYears,
         budget: userBudgets,
         revenue: userRevenues,
         runtime: userRuntimes,
