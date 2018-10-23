@@ -85,6 +85,8 @@ UserSchema.methods.findMost = function () {
     const companies = this.movies.map((item) => item.production_companies);
     const companyArray = mapValues(companies);
     const companyArrayNames = companyArray.map((company) => company.name);
+    const companyArrayIds = companyArray.map((company) => company.id)
+    const userCompanyIds = getFrequency(companyArrayIds);
     const userCompanies = getFrequency(companyArrayNames);
 
     const countries = this.movies.map((item) => item.production_countries);
@@ -108,6 +110,7 @@ UserSchema.methods.findMost = function () {
         genres: userGenres,
         genreId: userGenreId,
         companies: userCompanies,
+        companyIds: userCompanyIds,
         countries: userCountries,
         budget: userBudgets,
         revenue: userRevenues,
