@@ -97,7 +97,7 @@ router.post('/save', tryCatch(saveMovie));
 async function deleteMovie(req, res) {
     console.log('kiwi', req.body.title)
     const movieToDelete = await MovieModel.findOne({title: req.body.title});
-    const globalUser = await UserModel.findById(req.body.user);
+    
     console.log('kiwi movieToDelete returns', movieToDelete)
     if (movieToDelete === null) {
         res.json({
@@ -115,27 +115,24 @@ async function deleteMovie(req, res) {
             }
         }
 
-        const modifyRecords = async () => {
-        
-            const changedItems = await MovieModel.findById(movieToDelete.id, function(err, movie) {
-                removeItem(movie.users, req.body.user)
-                movie.save()
-            }).then(
+        MovieModel.findById(movieToDelete.id, function(err, movie) {
+            removeItem(movie.users, req.body.user)
+            movie.save(function(err, movie) {
                 UserModel.findById(req.body.user, function(err, user) {
-                    removeItem(user.movies, movieToDelete.id)
-                    user.save()
-                })
-            );
-
-           UserModel.findById(req.body.user).populate('movies').exec((err, movies) => {
-                    res.json({profile: movies.serialize(),
-                        preferences: movies.findMost()
+                    removeItem(user.movies, movieToDelete.id);
+                    user.save(function(err) {
+                        UserModel.findById(req.body.user)
+                        .populate('movies')
+                        .exec(function (err, movies) {
+                            res.json({
+                                profile: movies.serialize(),
+                                preferences: movies.findMost()
+                            })
+                        })
                     })
                 })
-            
-            
-        }
-        return modifyRecords();
+            })
+        })
     }
 }
 
