@@ -36,24 +36,25 @@ async function saveMovie(req, res) {
 
         movie.save(function(err, movie) {
             UserModel.findById(req.body.user, function(err, user) {
-                console.log(user)
                 user.movies.push(movie);
-                user.save(function(err, user) {
-                    res.json({
-                        user: user.serialize(),
-                        message: 'Movie Saved!'
+                user.save(function(err) {
+                    UserModel.findById(req.body.user)
+                    .populate('movies')
+                    .exec(function (err, movies) {
+                        res.json({
+                            profile: movies.serialize(),
+                            preferences: movies.findMost()
+                        })
                     })
                 })
             })
         })
+
     } else {
 
         const existingSavedMovie = await UserModel.findById(req.body.user);
 
         const exist = existingSavedMovie.movies;
-        console.log('kiwi exist returns', exist)
-        console.log('kiwi existing record is returns', existingRecord.id)
-
 
         const modifyExisting = (arr, existing) => {
             for (let i = 0; i < arr.length; i++) {
@@ -64,21 +65,25 @@ async function saveMovie(req, res) {
                     })
                 } 
             }
-            
-           UserModel.findById(req.body.user, function(err, user) {
-                user.movies.push(existingRecord.id);
-                user.save()
-            }).then(
-                MovieModel.findById(existingRecord.id, function(err, movie) {
-                    movie.users.push(req.body.user);
-                    movie.save(function(err, movie) {
-                        res.json({
-                            movie: movie.serialize(),
-                            message: 'Movie Saved!'
+        
+            MovieModel.findById(existingRecord.id, function(err, movie) {
+                movie.users.push(req.body.user);
+                movie.save(function(err, movie) {
+                    UserModel.findById(req.body.user, function(err, user) {
+                        user.movies.push(movie);
+                        user.save(function(err) {
+                            UserModel.findById(req.body.user)
+                            .populate('movies')
+                            .exec(function (err, movies) {
+                                res.json({
+                                    profile: movies.serialize(),
+                                    preferences: movies.findMost()
+                                })
+                            })
                         })
                     })
                 })
-            )
+            })
         }
 
         return modifyExisting(exist, existingRecord.id)
