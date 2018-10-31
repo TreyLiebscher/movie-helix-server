@@ -39,4 +39,4 @@ MovieSchema.methods.serialize = function () {
 
 const MovieModel = mongoose.model('MovieModel', MovieSchema);
 
-module.exports = { MovieModel };
+module.exports = {MovieModel};

@@ -55,6 +55,7 @@ describe('Users API routes', function () {
             createdUser = user;
             expect(user).to.be.an('object');
             expect(user.email).to.equal(email);
+            expect(user.username).to.be.a('string');
             expect(user.username).to.equal(username);
             expect(user.id).to.be.a('string');
         })

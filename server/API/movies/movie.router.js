@@ -77,7 +77,8 @@ async function saveMovie(req, res) {
                             .exec(function (err, movies) {
                                 res.json({
                                     profile: movies.serialize(),
-                                    preferences: movies.findMost()
+                                    preferences: movies.findMost(),
+                                    message: 'Movie Modified'
                                 })
                             })
                         })

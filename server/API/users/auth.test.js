@@ -12,6 +12,7 @@ const AUTH_REFRESH_ROUTE = '/users/refresh-auth-token';
 chai.use(chaiHttp);
 
 // same as in UserModel
+// used by testUtilCreateUser
 const username = 'Tester';
 const email = 'test@test.com';
 const password = 'password123';
